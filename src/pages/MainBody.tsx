@@ -5,7 +5,7 @@ function MainBody() {
         <main>
             <article>
                 <h1>나만의 TMI 저장소</h1>
-                <Link to="/MyUtmi">asd</Link>
+                <Link to="/my-utmi">asd</Link>
             </article>
         </main>
     )

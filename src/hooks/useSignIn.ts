@@ -2,13 +2,14 @@ import { useEffect, useState } from "react"
 import { USER_INPUT_VALIDATION } from "../constants/User"
 import postSignIn from "@/apis/PostSignIn"
 import { useAuth } from "@/context/AuthContext"
+import { useNavigate } from "react-router-dom"
 
 interface ValidateInputProps {
     inputType: "email" | "nickname" | "password"
     value: string
 }
 
-function useSignIn(closeModal: () => void) {
+function useSignIn() {
     const [openPopup, setOpenPopup] = useState(false)
     const [popupMessage, setPopupMessage] = useState("")
     const [email, setEmail] = useState("")
@@ -19,6 +20,7 @@ function useSignIn(closeModal: () => void) {
     const [isLoading, setIsLoading] = useState(false)
     const [success, setSuccess] = useState(false)
     const { setAuth } = useAuth()
+    const navigate = useNavigate()
 
     useEffect(() => {
         const isFormErrorFree = !!(!emailError && !passwordError && email && password)
@@ -56,6 +58,7 @@ function useSignIn(closeModal: () => void) {
             setAuth(response)
             setSuccess(true)
             handleOpenPopup("로그인 되었습니다.")
+            navigate("/myUtmi")
         } catch (error: any) {
             handleOpenPopup(error.message)
         } finally {

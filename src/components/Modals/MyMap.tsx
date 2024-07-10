@@ -1,15 +1,41 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import ModalInput from "../SignForm/ModalInput"
 import Popup from "./Popup"
 import postNewMap from "@/apis/PostNewMap"
+import { useData } from "@/context/DataContext"
+import PutEditMap from "@/apis/PutEditMap"
 
-function NewMap({ closeModal }: { closeModal: () => void }) {
+interface MapLists {
+    id: number
+    title: string
+    createdByMe: boolean
+}
+
+interface Props {
+    isOpen: boolean
+    modalType: "New" | "Edit" | ""
+    closeModal: () => void
+    data?: MapLists
+}
+
+function MyMap({ modalType, isOpen, closeModal, data }: Props) {
     const [openPopup, setOpenPopup] = useState(false)
     const [popupMessage, setPopupMessage] = useState("")
     const [success, setSuccess] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [titleValue, setTitleValue] = useState("")
     const [titleError, setTitleError] = useState("")
+    const { newData, setNewData } = useData()
+
+    useEffect(() => {
+        setTitleError("")
+        if (modalType === "New") {
+            setTitleValue("")
+        }
+        if (modalType === "Edit" && data) {
+            setTitleValue(data.title)
+        }
+    }, [isOpen])
 
     const handleTitleChange = (value: string) => {
         setTitleValue(value)
@@ -25,16 +51,34 @@ function NewMap({ closeModal }: { closeModal: () => void }) {
         setOpenPopup(false)
     }
 
-    const handleSubmit = async () => {
+    const handleNewMap = async () => {
         setIsLoading(true)
         try {
             await postNewMap({ title: titleValue })
             setSuccess(true)
             handleOpenPopup("새로운 Tmi 맵이 생성 되었습니다.")
+            setNewData(!newData)
         } catch (error: any) {
             handleOpenPopup(error.message)
         } finally {
             setIsLoading(false)
+        }
+    }
+
+    const handleEditMap = async () => {
+        if (data) {
+            setIsLoading(true)
+            try {
+                await PutEditMap({ title: titleValue, id: data.id })
+                setSuccess(true)
+                handleOpenPopup("Tmi 맵이 수정 되었습니다.")
+                setNewData(!newData)
+            } catch (error: any) {
+                // handleOpenPopup(error)
+                console.log(error)
+            } finally {
+                setIsLoading(false)
+            }
         }
     }
 
@@ -55,25 +99,26 @@ function NewMap({ closeModal }: { closeModal: () => void }) {
                 className="width-90"
                 onSubmit={(e) => {
                     e.preventDefault()
-                    handleSubmit()
+                    modalType === "New" ? handleNewMap() : handleEditMap()
                 }}>
                 <header>
-                    <h1 className="text-align-center">새로운 Tmi 맵 생성</h1>
+                    <h1 className="text-align-center">{modalType === "New" ? "새로운 Tmi 맵 생성" : "Tmi 맵 수정"}</h1>
                 </header>
                 <main>
                     <ModalInput
                         type="text"
-                        label="이름"
+                        label="맵 이름"
                         value={titleValue}
                         onChange={handleTitleChange}
                         errorMessage={titleError}
                     />
                 </main>
                 <button
+                    className="margin-button"
                     type="submit"
                     disabled={!titleValue || !!titleError || isLoading}
                     aria-busy={isLoading ? "true" : "false"}>
-                    생성하기
+                    {modalType === "New" ? "생성하기" : "수정하기"}
                 </button>
             </form>
             <Popup isOpen={openPopup} closePopup={handleClosePopup} closeModal={closeModal} isSuccess={success}>
@@ -83,4 +128,4 @@ function NewMap({ closeModal }: { closeModal: () => void }) {
     )
 }
 
-export default NewMap
+export default MyMap

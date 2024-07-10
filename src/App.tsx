@@ -5,32 +5,35 @@ import MainBody from "./pages/MainBody"
 import MyUtmi from "./pages/MyUtmi"
 import { AuthProvider } from "./context/AuthContext"
 import MyInfo from "./pages/MyInfo"
-import { UserProvider } from "./context/UserContext"
-import SideBar from "./components/SideBar"
-import TmiMapPage from "./pages/TmiMapPage"
+import FriendUtmi from "./pages/FriendUtmi"
+import FriendUtmiById from "./pages/FriendUtmiById"
+import { DataProvider } from "./context/DataContext"
+import { DarkModeProvider } from "./context/DarkModeContext"
+import ChangePassword from "./pages/ChangePassword"
 
 function App() {
     return (
         <>
-            <AuthProvider>
-                <UserProvider>
-                    <div id="portal" />
-                    <BrowserRouter>
-                        <main className="container">
-                            <Header />
-                            <SideBar />
-                            <div className="margin-left">
+            <DarkModeProvider>
+                <AuthProvider>
+                    <DataProvider>
+                        <div id="portal" />
+                        <BrowserRouter>
+                            <main className="container">
+                                <Header />
                                 <Routes>
                                     <Route index={true} element={<MainBody />} />
-                                    <Route path="/MyUtmi" element={<MyUtmi />} />
-                                    <Route path="/MyInfo" element={<MyInfo />} />
-                                    <Route path="/tmiMap/:id" element={<TmiMapPage />} />
+                                    <Route path="/my-utmi" element={<MyUtmi />} />
+                                    <Route path="/my-info" element={<MyInfo />} />
+                                    <Route path="/change-password" element={<ChangePassword />} />
+                                    <Route path="/friend-utmi/" element={<FriendUtmi />} />
+                                    <Route path="/friend-utmi/:id?" element={<FriendUtmiById />} />
                                 </Routes>
-                            </div>
-                        </main>
-                    </BrowserRouter>
-                </UserProvider>
-            </AuthProvider>
+                            </main>
+                        </BrowserRouter>
+                    </DataProvider>
+                </AuthProvider>
+            </DarkModeProvider>
         </>
     )
 }

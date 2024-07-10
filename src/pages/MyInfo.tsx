@@ -1,46 +1,29 @@
-import uploadImageFiles from "@/apis/UploadImageFiles"
+import Popup from "@/components/Modals/Popup"
 import ModalInput from "@/components/SignForm/ModalInput"
-import { useUser } from "@/context/UserContext"
+import { useData } from "@/context/DataContext"
 import useMyInfo from "@/hooks/useMyInfo"
-import { useState } from "react"
+import imagePaths from "@/constants/ImagePaths"
 
 function MyInfo() {
     const {
         nickname,
         handleNicknameChange,
         nicknameError,
-        password,
-        handlePasswordChange,
-        passwordError,
-        passwordConfirm,
-        handlePasswordConfirmChange,
-        passwordConfirmError,
         isFormValid,
         openPopup,
         popupMessage,
         handleClosePopup,
         isLoading,
         success,
+        handleSubmit,
+        imageUrl,
+        handleFileChange,
+        handleSelect,
     } = useMyInfo()
-    const { userData } = useUser()
-    const [imageUrl, setImageUrl] = useState("")
+    const { userData } = useData()
 
-    const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]
-        if (file) {
-            // setIsLoading(true)
-            // setError(null)
-            try {
-                const response = await uploadImageFiles(file)
-                setImageUrl(response.profileImageUrl)
-            } catch (error) {
-                //     console.error("업로드 실패:", error)
-                //     setError("이미지 업로드에 실패했습니다.")
-                // } finally {
-                //     setIsLoading(false)
-            }
-        }
-    }
+    const filteredImagePaths = imagePaths.filter((image) => image.path !== imageUrl)
+
     if (!userData) {
         return <div>로그인 해주세요</div>
     }
@@ -49,15 +32,60 @@ function MyInfo() {
         <>
             <article>
                 <form
-                    className="width-90"
+                    className="width-90 margin-info"
                     onSubmit={(e) => {
                         e.preventDefault()
-                        //  handleSubmit()
+                        handleSubmit()
                     }}>
                     <header>
                         <h1 className="text-align-center">내 정보 수정</h1>
                     </header>
-                    <main>
+                    <main className="margin-info">
+                        프로필 사진 변경
+                        <nav className="margin-bot profile-img-box">
+                            <ul>
+                                {!imageUrl ? (
+                                    <li className="relative inline">
+                                        <div className="circle center bg-purple padding-15">
+                                            <span className="profile-text">{userData.nickname}</span>
+                                        </div>
+                                        <label htmlFor="file" className="absolute cursor profile-button">
+                                            직접 변경
+                                        </label>
+                                        <input type="file" id="file" accept="image/*" onChange={handleFileChange} />
+                                    </li>
+                                ) : (
+                                    <li className="relative inline">
+                                        <img className="profile-img circle" src={imageUrl} />
+                                        <label htmlFor="file" className="absolute cursor profile-button">
+                                            직접 변경
+                                        </label>
+                                        <input type="file" id="file" accept="image/*" onChange={handleFileChange} />
+                                    </li>
+                                )}
+                            </ul>
+                            <ul>
+                                {imageUrl && (
+                                    <li>
+                                        <div
+                                            className="middle-circle relative center bg-purple padding-9"
+                                            onClick={() => handleSelect(null)}>
+                                            <span className="profile-text">{userData.nickname}</span>
+                                        </div>
+                                    </li>
+                                )}
+                                {filteredImagePaths.map((image, index) => (
+                                    <li key={image.id}>
+                                        <img
+                                            className="profile-img middle-circle"
+                                            src={image.path}
+                                            alt={`기본 프로필 사진${index + 1}`}
+                                            onClick={() => handleSelect(image.path)}
+                                        />
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
                         <label htmlFor="이메일수정">이메일</label>
                         <input
                             type="text"
@@ -74,31 +102,14 @@ function MyInfo() {
                             onChange={handleNicknameChange}
                             errorMessage={nicknameError}
                         />
-                        <ModalInput
-                            type="password"
-                            label="비밀번호 수정"
-                            value={password}
-                            onChange={handlePasswordChange}
-                            errorMessage={passwordError}
-                        />
-                        <ModalInput
-                            type="password"
-                            label="비밀번호 확인 "
-                            value={passwordConfirm}
-                            onChange={handlePasswordConfirmChange}
-                            errorMessage={passwordConfirmError}
-                        />
-                        <label htmlFor="파일선택" />
-                        <input id="파일선택" type="file" accept="image/*" onChange={handleFileChange} />
-                        {imageUrl && <img className="profile-img" src={imageUrl} />}
                     </main>
                     <button type="submit" disabled={!isFormValid || isLoading} aria-busy={isLoading ? "true" : "false"}>
                         내 정보 수정
                     </button>
                 </form>
-                {/* <Popup isOpen={openPopup} closePopup={handleClosePopup} closeModal={closeModal} isSuccess={success}>
-             {popupMessage}
-         </Popup> */}
+                <Popup isOpen={openPopup} closePopup={handleClosePopup} isSuccess={success}>
+                    {popupMessage}
+                </Popup>
             </article>
         </>
     )

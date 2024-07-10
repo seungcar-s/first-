@@ -5,15 +5,15 @@ import SignUp from "./Modals/SignUp"
 import BaseModal from "./Modals/BaseModal"
 import SignIn from "./Modals/SignIn"
 import { useAuth } from "@/context/AuthContext"
-import { useUser } from "@/context/UserContext"
+import { useData } from "@/context/DataContext"
+import { useDarkMode } from "@/context/DarkModeContext"
 
 function Header() {
-    const localDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
-    const [isDarkMode, setIsDarkMode] = useState(localDarkMode)
+    const { isDarkMode, toggleDarkMode } = useDarkMode()
     const [openModal, setOpenModal] = useState(false)
     const [signUp, setSignUp] = useState(true)
     const { auth, setAuth } = useAuth()
-    const { userData } = useUser()
+    const { userData, imageUrl } = useData()
 
     const handleOpenSignUpModal = () => {
         setSignUp(true)
@@ -28,11 +28,6 @@ function Header() {
     const handleCloseModal = () => {
         setSignUp(!signUp)
         setOpenModal(false)
-    }
-
-    const handleThemeMode = () => {
-        setIsDarkMode(!isDarkMode)
-        document.documentElement.dataset.theme = isDarkMode ? "light" : "dark"
     }
 
     const handleLogout = () => {
@@ -50,47 +45,71 @@ function Header() {
                         <div className="small">너의 TMI를 알려줘</div>
                     </li>
                 </ul>
-                {auth ? (
-                    <ul>
-                        <Link className="text-default-color" to="/">
-                            <li>남의-Tmi</li>
-                        </Link>
-                        <li />
-                        <Link className="text-default-color" to="/myUtmi">
-                            <li>나의-Tmi</li>
-                        </Link>
-                        <li />
-                        <details className="dropdown">
-                            <summary>{userData?.nickname} 님</summary>
-                            <ul>
-                                <Link className="text-default-color" to="/MyInfo">
-                                    <li>내 정보 수정</li>
-                                </Link>
-                                <Link className="text-default-color" to="/">
-                                    <li onClick={handleLogout}>로그아웃</li>
-                                </Link>
-                            </ul>
-                        </details>
-                        <li />
-                        <li>
-                            <DarkModeSwitch checked={isDarkMode} onChange={handleThemeMode} size={20} />
-                        </li>
-                    </ul>
-                ) : (
-                    <ul>
-                        <li className="cursor" onClick={handleOpenSignInModal}>
-                            로그인
-                        </li>
-                        <li />
-                        <li className="cursor" onClick={handleOpenSignUpModal}>
-                            회원가입
-                        </li>
-                        <li />
-                        <li>
-                            <DarkModeSwitch checked={isDarkMode} onChange={handleThemeMode} size={20} />
-                        </li>
-                    </ul>
-                )}
+
+                <ul>
+                    {auth ? (
+                        <>
+                            <Link className="text-default-color" to="/">
+                                <li>랜덤-Tmi</li>
+                            </Link>
+                            <li />
+                            <Link className="text-default-color" to="/friend-utmi">
+                                <li>친구-Tmi</li>
+                            </Link>
+                            <li />
+                            <Link className="text-default-color" to="/my-utmi">
+                                <li>나의-Tmi</li>
+                            </Link>
+                            <li />
+                            <details className="dropdown">
+                                <summary className="center">
+                                    {userData?.nickname && (
+                                        <span>
+                                            {userData.nickname.length > 4
+                                                ? `${userData.nickname.slice(0, 4)}...`
+                                                : userData.nickname}
+                                        </span>
+                                    )}
+                                    {!imageUrl ? (
+                                        <div className="small-circle center bg-purple">
+                                            <span className="profile-text">{userData?.nickname[0]}</span>
+                                        </div>
+                                    ) : (
+                                        <div className="inline">
+                                            <img className="profile-img small-circle" src={imageUrl} />
+                                        </div>
+                                    )}
+                                </summary>
+                                <ul>
+                                    <Link className="text-default-color" to="/my-info">
+                                        <li>내 정보 수정</li>
+                                    </Link>
+                                    <Link className="text-default-color" to="/change-password">
+                                        <li>비밀번호 변경</li>
+                                    </Link>
+                                    <Link className="text-default-color" to="/">
+                                        <li onClick={handleLogout}>로그아웃</li>
+                                    </Link>
+                                </ul>
+                            </details>
+                            <li />
+                        </>
+                    ) : (
+                        <>
+                            <li className="cursor" onClick={handleOpenSignInModal}>
+                                로그인
+                            </li>
+                            <li />
+                            <li className="cursor" onClick={handleOpenSignUpModal}>
+                                회원가입
+                            </li>
+                            <li />
+                        </>
+                    )}
+                    <li>
+                        <DarkModeSwitch checked={isDarkMode} onChange={toggleDarkMode} size={20} />
+                    </li>
+                </ul>
             </nav>
             <BaseModal isOpen={openModal} closeModal={handleCloseModal}>
                 {signUp ? <SignUp closeModal={handleCloseModal} /> : <SignIn closeModal={handleCloseModal} />}

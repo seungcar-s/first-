@@ -58,10 +58,13 @@
         color: var(--pico-primary-background);
     }
 
+    .margin-bot {
+        margin-bottom: 1.5rem;
+    }
+
     #button {
         display: flex;
-        justify-content: start;
-        padding-left: 0;
+        justify-content: center;
     }
 
     .logo:hover {
@@ -69,11 +72,16 @@
     }
 
     .margin-popup {
-        margin: 1.4rem 2.4rem;
+        margin: 0.5rem 2.4rem;
+    }
+
+    .margin-info {
+        margin-top: 2rem;
+        margin-bottom: 0.8rem;
     }
 
     .margin-button {
-        margin-top: 1rem;
+        margin-top: 0.6rem;
     }
 
     .scroll-button {
@@ -82,24 +90,32 @@
         padding: 0;
     }
 
+    .profile-img-box {
+        margin-left: 0;
+        overflow: auto;
+    }
+
     .popup {
         text-align: center;
         width: auto;
     }
 
-    .profile-img {
-        width: 150px;
-        height: 150px;
-        object-fit: cover;
-    }
-
-    .fixed {
-        position: fixed;
-    }
-
     .overflow {
         overflow-y: hidden;
         overflow-x: hidden;
+    }
+
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .center-col {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
     }
 
     .margin-left {
@@ -116,5 +132,141 @@
         background-color: var(--pico-primary-background);
         color: white;
         border-radius: 8px;
+    }
+
+    .edit-icon {
+        top: 5%;
+        right: 50%;
+        width: 1.3rem;
+        height: 1.3rem;
+        cursor: pointer;
+        transform: translateX(50%);
+    }
+
+    .eye-icon {
+        background-color: var(--pico-card-background-color);
+        top: -10%;
+        right: 2.8%;
+        transform: translateY(50%);
+    }
+
+    .between {
+        justify-content: space-between;
+    }
+
+    .visible-button {
+        margin-left: 0.2rem;
+        font-size: 0.7rem;
+    }
+
+    .relative {
+        position: relative;
+    }
+
+    .absolute {
+        position: absolute;
+    }
+
+    .fixed {
+        position: fixed;
+    }
+
+    .flex {
+        display: flex;
+    }
+
+    .bg-purple {
+        background-color: var(--pico-primary-hover-background);
+    }
+
+    .bg-default {
+        background-color: var(--pico-card-background-color);
+    }
+
+    .no-margin {
+        margin: 0;
+    }
+
+    .circle-button {
+        border-radius: 50%;
+        cursor: pointer;
+        border: 1px solid;
+    }
+
+    .inline {
+        display: inline-block;
+    }
+
+    .profile-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100px;
+        height: 20px;
+        border-radius: 12px;
+        background: var(--pico-primary-background);
+        color: white;
+        text-align: center;
+        bottom: 2%;
+        left: 25%;
+    }
+
+    .mini-circle {
+        top: 75%;
+        right: 9%;
+    }
+
+    #file {
+        display: none;
+    }
+
+    .circle {
+        min-width: 9rem;
+        width: 9rem;
+        height: 9rem;
+        border-radius: 50%;
+        text-align: center;
+        border: 1px solid var(--pico-color);
+        font-size: 1.25rem;
+        font-weight: 700;
+    }
+
+    .middle-circle {
+        min-width: 5rem;
+        width: 5rem;
+        height: 5rem;
+        border-radius: 50%;
+        text-align: center;
+        border: 1px solid var(--pico-color);
+        font-size: 0.6rem;
+        font-weight: 700;
+    }
+
+    .small-circle {
+        margin-left: 0.5rem;
+        width: 1.8rem;
+        height: 1.8rem;
+        border-radius: 50%;
+        text-align: center;
+        border: 1px solid var(--pico-color);
+        font-size: 0.6rem;
+        font-weight: 700;
+    }
+
+    .padding-15 {
+        padding: 1.5rem;
+    }
+
+    .padding-9 {
+        padding: 0.9rem;
+    }
+
+    .profile-img {
+        padding: 0;
+        object-fit: cover;
+    }
+
+    .profile-text {
+        color: white;
     }
 }

@@ -17,7 +17,7 @@ function SignIn({ closeModal }: { closeModal: () => void }) {
         handleClosePopup,
         isLoading,
         success,
-    } = useSignIn(closeModal)
+    } = useSignIn()
 
     return (
         <>

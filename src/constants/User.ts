@@ -38,10 +38,10 @@ export const USER_INPUT_VALIDATION: USER_INPUT_VALIDATION_TYPE = {
         },
     },
     password: {
-        regex: /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,25}$/,
+        regex: /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,20}$/,
         errorMessage: {
             empty: "비밀번호를 입력해 주세요.",
-            invalid: "영문과 숫자를 조합하여 8자 이상 입력해 주세요.",
+            invalid: "영문과 숫자를 조합하여 8자 이상 20자 이하로 입력해 주세요.",
         },
     },
 }
